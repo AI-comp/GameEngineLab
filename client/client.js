@@ -11,6 +11,7 @@ Template.command_center.players = function () {
 };
 
 Template.command_center.myCommand = function () {
+  if (!game()) return undefined;
   var me = Template.command_center.me();
   return Commands.findOne({ playerId: me._id, turn: game().turn });
 };
@@ -41,7 +42,6 @@ Template.chat.events({
   },
   'click #advance': function () {
     cmds = _.range(game().turn + 1);
-    console.log(game());
     Meteor.call('advance_turn', [
         cmds.map(function (x) { return 1; })
       , cmds.map(function (x) { return 2; })
