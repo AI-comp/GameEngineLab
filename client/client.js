@@ -31,11 +31,9 @@ Template.chat.messages = function () {
 
 Template.chat.events({
   'click #enter': function () {
-    var myId = Players.insert({
-      name: $("#name").val(),
-      ready: false
+    Meteor.call("enter", $("#name").val(), function (error, myId) {
+      Session.set("me", myId);
     });
-    Session.set("me", myId);
   },
   'click #ready': function () {
     Players.update(Session.get("me"), { $set: { ready: true } });
@@ -63,7 +61,6 @@ Template.chat.events({
 
 Template.player.command = function () {
   if (!game()) return undefined;
-  var c = Commands.findOne({ playerId: this._id, turn: game().turn - 1 });
-  return c;
+  return Commands.findOne({ playerId: this._id, turn: game().turn - 1 });;
 };
 
