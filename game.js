@@ -227,7 +227,7 @@ if (Meteor.isClient) {
     var game = Games.findOne({});
     if (!game) return undefined;
     var c = Commands.findOne({ playerId: this._id, turn: game.turn - 1 });
-    console.log(c);
+    //console.log(c);
     return c;
   };
 }
@@ -238,14 +238,15 @@ if (Meteor.isServer) {
   function initializeGame() {
     var game = new Game(4);
     game.populateHeroines(10);
-    return Games.insert(game);
-  };
+    Games.insert(game);
+    return game;
+  }
 
   Meteor.startup(function () {
-    var gameId = initializeGame();
+    var game = initializeGame();
     return Meteor.methods({
       advance_turn: function(cmds) {
-        var game = Commands.findOne(gameId);
+        console.log(JSON.stringify(game));
         if (!game.isFinished()) {
           game.proceed(cmds);
         }
@@ -253,6 +254,7 @@ if (Meteor.isServer) {
           name: "system",
           msg: JSON.stringify(game.getRanking())
         });
+        var gameId = Games.findOne({})._id;
         Games.update(gameId, { $set: game });
       },
       clear: function() {
@@ -260,7 +262,7 @@ if (Meteor.isServer) {
         Messages.remove({});
         Commands.remove({});
         Games.remove({});
-        gameId = initializeGame();
+        game = initializeGame();
       },
 
       sendCommand: function (command) {

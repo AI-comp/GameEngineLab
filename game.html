@@ -32,6 +32,11 @@
 
 <template name="chat">
   <p>
+    {{#each messages}}
+      {{> message}}
+    {{/each}}
+  </p>
+  <p>
     {{#if me}}
       message: <input type="text" id="chat_msg" value="" />
       <input type="button" id="send" value="Send" />
