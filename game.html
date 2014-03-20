@@ -4,29 +4,40 @@
 
 <body>
   <div id="outer">
+    {{> console}}
+    {{> command_center}}
     {{> chat}}
   </div>
 </body>
 
-<template name="chat">
+<template name="console">
+</template>
+
+<template name="command_center">
   <p>
     {{#each players}}
       {{> player}}
     {{/each}}
   </p>
   <p>
-    {{#each messages}}
-      {{> message}}
-    {{/each}}
+    {{#if me}}
+      command: <input type="text" id="cmd_text" value="" />
+      <input type="button" id="send_cmd" value="Send" />
+      {{#if myCommand}}
+        {{> command myCommand}}
+      {{/if}}
+    {{/if}}
   </p>
+</template>
+
+<template name="chat">
   <p>
     {{#if me}}
       message: <input type="text" id="chat_msg" value="" />
       <input type="button" id="send" value="Send" />
-      {{#if me.ready}}
-      {{else}}
+      {{#unless me.ready}}
         <input type="button" id="ready" value="Ready" />
-      {{/if}}
+      {{/unless}}
     {{else}}
       name: <input type="text" id="name" value="your name" />
       <input type="button" id="enter" value="Enter" />
@@ -39,10 +50,18 @@
   <div class="player">
     <span class="name">{{name}}</span>
     <span class="ready">{{ready}}</span>
+    {{#if command}}
+      {{> command command}}
+    {{/if}}
   </div>
 </template>
 
 <template name="message">
   {{name}} : {{msg}}
   <br />
+</template>
+
+<template name="command">
+  <span class="command">{{text}}</span>
+  {{turn}}
 </template>
