@@ -1,2 +1,2 @@
-meteor-chat
+GameEngineLab
 ===========
