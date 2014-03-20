@@ -264,7 +264,7 @@ if (Meteor.isServer) {
       },
 
       sendCommand: function (command) {
-        Commands.update({ _id: command.id, turn: command.turn }, command, { upsert: true });
+        Commands.update({ playerId: command.playerId, turn: command.turn }, command, { upsert: true });
       },
     });
   });
