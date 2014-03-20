@@ -52,10 +52,7 @@ Template.chat.events({
   },
   'click #send': function () {
     var me = Template.chat.me();
-    Messages.insert({
-      name: me.name,
-      msg: $("#chat_msg").val()
-    });
+    Messages.insert(new Message(me.name, $("#chat_msg").val()));
   }
 });
 
