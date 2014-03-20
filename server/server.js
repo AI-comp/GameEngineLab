@@ -20,7 +20,8 @@ Meteor.startup(function () {
       var gameId = Games.findOne({})._id;
       Games.update(gameId, { $set: game });
     },
-    clear: function() {
+
+    clear: function () {
       Players.remove({});
       Messages.remove({});
       Commands.remove({});
@@ -30,7 +31,10 @@ Meteor.startup(function () {
 
     sendCommand: function (command) {
       Commands.update({ playerId: command.playerId, turn: command.turn }, command, { upsert: true });
+      var game = Games.findOne({});
+      if (Commands.find({ turn: game.turn }).count() == Players.find({}).count()) {
+        //game.proceed
+      }
     },
   });
 });
-
