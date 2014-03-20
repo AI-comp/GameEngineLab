@@ -1,4 +1,6 @@
-var turn = 0;
+function game() {
+  return Games.findOne({});
+}
 
 Template.chat.me = Template.command_center.me = function () {
   return Players.findOne(Session.get("me"));
@@ -10,16 +12,14 @@ Template.command_center.players = function () {
 
 Template.command_center.myCommand = function () {
   var me = Template.command_center.me();
-  var game = Games.findOne({});
-  return Commands.findOne({ playerId: me._id, turn: game.turn });
+  return Commands.findOne({ playerId: me._id, turn: game().turn });
 };
 
 Template.command_center.events({
   'click #send_cmd': function () {
     var me = Template.command_center.me();
     var commandText = $("#cmd_text").val();
-    var game = Games.findOne({});
-    var command = new Command(me._id, commandText, game.turn);
+    var command = new Command(me._id, commandText, game().turn);
     Meteor.call("sendCommand", command);
   }
 });
@@ -40,18 +40,17 @@ Template.chat.events({
     Players.update(Session.get("me"), { $set: { ready: true } });
   },
   'click #advance': function () {
-    turn += 1;
-    cmds = _.range(turn);
+    cmds = _.range(game().turn + 1);
+    console.log(game());
     Meteor.call('advance_turn', [
-        cmds.map(function(x) { return 1; })
-      , cmds.map(function(x) { return 2; })
-      , cmds.map(function(x) { return 2; })
-      , cmds.map(function(x) { return 3; })
+        cmds.map(function (x) { return 1; })
+      , cmds.map(function (x) { return 2; })
+      , cmds.map(function (x) { return 2; })
+      , cmds.map(function (x) { return 3; })
     ]);
   },
   'click #clear': function () {
     Meteor.call('clear');
-    turn = 0;
   },
   'click #send': function () {
     var me = Template.chat.me();
@@ -63,10 +62,8 @@ Template.chat.events({
 });
 
 Template.player.command = function () {
-  var game = Games.findOne({});
-  if (!game) return undefined;
-  var c = Commands.findOne({ playerId: this._id, turn: game.turn - 1 });
-  //console.log(c);
+  if (!game()) return undefined;
+  var c = Commands.findOne({ playerId: this._id, turn: game().turn - 1 });
   return c;
 };
 

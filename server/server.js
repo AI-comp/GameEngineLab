@@ -7,6 +7,7 @@ function initializeGame() {
 
 Meteor.startup(function () {
   var game = initializeGame();
+
   return Meteor.methods({
     advance_turn: function(cmds) {
       console.log(JSON.stringify(game));
