@@ -60,3 +60,15 @@ body {
 .inc {
   cursor: pointer;
 }
+
+.console {
+    overflow: scroll;
+	width: 600px;
+	height: 250px;
+    border-style: solid;
+}
+
+.game_log {
+    border-style: none none dotted none;
+    border-color: #aaa;
+}

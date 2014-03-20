@@ -2,7 +2,11 @@ function game() {
   return Games.findOne({});
 }
 
-Template.chat.me = Template.command_center.me = function () {
+Template.console.gameLogs = function () {
+  return GameLogs.find({});
+}
+
+Template.command_center.me = Template.chat.me = function () {
   return Players.findOne(Session.get("me"));
 };
 

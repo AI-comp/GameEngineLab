@@ -11,6 +11,17 @@
 </body>
 
 <template name="console">
+  <div class="console">
+    {{#each gameLogs}}
+      {{> gameLog}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="gameLog">
+  <div class="game_log">
+    {{text}}
+  </div>
 </template>
 
 <template name="command_center">

@@ -24,7 +24,7 @@ Meteor.startup(function () {
       if (!game.isFinished()) {
         game.proceed(cmds);
       }
-      Messages.insert(new Message("system", JSON.stringify(game.getRanking())));
+      GameLogs.insert(new GameLog(JSON.stringify(game.getRanking())));
       var gameId = Games.findOne({})._id;
       Games.update(gameId, { $set: game });
     },
@@ -33,6 +33,7 @@ Meteor.startup(function () {
       Players.remove({});
       Messages.remove({});
       Commands.remove({});
+      GameLogs.remove({});
       Games.remove({});
       game = initializeGame();
     },
