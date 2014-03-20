@@ -1,9 +1,9 @@
 Heroine = (function () {
-  function Heroine(value, numHeros) {
+  function Heroine(value, numHeroes) {
     this.value = value;
     this.dateScore = [];
     this.loveScore = [];
-    for (var i = 0; i < numHeros; i++) {
+    for (var i = 0; i < numHeroes; i++) {
       this.dateScore.push(0);
       this.loveScore.push(0);
     }
@@ -25,15 +25,15 @@ Heroine = (function () {
     }
   };
 
-  Heroine.prototype.getBestHeros = function (heros) {
+  Heroine.prototype.getBestHeroes = function (heroes) {
     var maxScore = Math.max.apply(null, this.loveScore);
-    var bestHeros = [];
-    _.each(heros, function (hero) {
+    var bestHeroes = [];
+    _.each(heroes, function (hero) {
       if (this.loveScore[hero.index] === maxScore) {
-        bestHeros.push(hero);
+        bestHeroes.push(hero);
       }
     }, this);
-    return bestHeros;
+    return bestHeroes;
   };
   
   return Heroine;
