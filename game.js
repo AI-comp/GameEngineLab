@@ -204,10 +204,10 @@ if (Meteor.isClient) {
       turn += 1;
       cmds = _.range(turn);
       Meteor.call('advance_turn', [
-          cmds.map(function(x) { return 1; })
-        , cmds.map(function(x) { return 2; })
-        , cmds.map(function(x) { return 2; })
-        , cmds.map(function(x) { return 3; })
+          cmds.map(function (x) { return 1; })
+        , cmds.map(function (x) { return 2; })
+        , cmds.map(function (x) { return 2; })
+        , cmds.map(function (x) { return 3; })
       ]);
     },
     'click #clear': function () {
@@ -227,7 +227,6 @@ if (Meteor.isClient) {
     var game = Games.findOne({});
     if (!game) return undefined;
     var c = Commands.findOne({ playerId: this._id, turn: game.turn - 1 });
-    console.log(c);
     return c;
   };
 }
@@ -244,7 +243,7 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     var gameId = initializeGame();
     return Meteor.methods({
-      advance_turn: function(cmds) {
+      advance_turn: function (cmds) {
         var game = Commands.findOne(gameId);
         if (!game.isFinished()) {
           game.proceed(cmds);
@@ -255,7 +254,8 @@ if (Meteor.isServer) {
         });
         Games.update(gameId, { $set: game });
       },
-      clear: function() {
+
+      clear: function () {
         Players.remove({});
         Messages.remove({});
         Commands.remove({});
@@ -265,6 +265,10 @@ if (Meteor.isServer) {
 
       sendCommand: function (command) {
         Commands.update({ playerId: command.playerId, turn: command.turn }, command, { upsert: true });
+        var game = Games.findOne({});
+        if (Commands.find({ turn: game.turn }).count() == Players.find({}).count()) {
+          //game.proceed
+        }
       },
     });
   });
