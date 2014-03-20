@@ -1,18 +1,18 @@
 Game = (function () {
-  function Game(numHeros) {
-    this.numHeros = numHeros;
+  function Game(numHeroes) {
+    this.numHeroes = numHeroes;
     this.heroines = [];
     this.turn = 0;
   }
 
   Game.prototype.addHeroine = function (value) {
-    this.heroines.push(new Heroine(value, this.numHeros));
+    this.heroines.push(new Heroine(value, this.numHeroes));
   };
 
   Game.prototype.populateHeroines = function (numHeroines) {
     this.heroines = []
     for (var i = 0; i < numHeroines; i++) {
-      this.heroines.push(new Heroine(Math.floor(Math.random() * 6) + 1, this.numHeros));
+      this.heroines.push(new Heroine(Math.floor(Math.random() * 6) + 1, this.numHeroes));
     }
   };
 
@@ -20,7 +20,7 @@ Game = (function () {
     this.turn += 1;
 
     for (var i = 0; i < this.turn; i++) {
-      for (var heroIndex = 0; heroIndex < this.numHeros; heroIndex++) {
+      for (var heroIndex = 0; heroIndex < this.numHeroes; heroIndex++) {
         var targetHeroineIndex = moves[heroIndex][i];
         if (targetHeroineIndex < 0 || targetHeroineIndex >= this.heroines.length) {
           targetHeroineIndex = 0;
@@ -39,19 +39,19 @@ Game = (function () {
   };
 
   Game.prototype.getRanking = function () {
-    var heros = [];
-    for (var index = 0; index < this.numHeros; index++) {
-      heros.push(new Hero(index));
+    var heroes = [];
+    for (var index = 0; index < this.numHeroes; index++) {
+      heroes.push(new Hero(index));
     }
 
     _.each(this.heroines, function (heroine) {
-      var bestHeros = heroine.getBestHeros(heros);
-      _.each(bestHeros, function (bestHero) {
-        bestHero.star += 1 / bestHeros.length;
+      var bestHeroes = heroine.getBestHeroes(heroes);
+      _.each(bestHeroes, function (bestHero) {
+        bestHero.star += 1 / bestHeroes.length;
       });
     });
 
-    _.each(heros, function (hero) {
+    _.each(heroes, function (hero) {
       hero.totalLoveScore = this.heroines.map(function (heroine) {
         return heroine.loveScore[hero.index];
       }).reduce(function (x, y) {
@@ -59,7 +59,7 @@ Game = (function () {
       });
     }, this);
 
-    return heros.slice(0).sort(Hero.compareTo).reverse();
+    return heroes.slice(0).sort(Hero.compareTo).reverse();
   };
   
   return Game;
