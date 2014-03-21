@@ -3,16 +3,16 @@ var games = [];
 function startGame(room) {
   var game = games[room.gameId];
   game.initialize(room.capacity);
-  room.logs.push(game.getStatus());
+  room.logs.push(JSON.stringify(game.getStatus()));
   room.isStarted = true;
 }
 
 function processGame(room, commands) {
   var game = games[room.gameId];
   game.processTurn(commands);
-  room.logs.push(game.getStatus());
+  room.logs.push(JSON.stringify(game.getStatus()));
   if (game.isFinished()) {
-    room.logs.push(game.getRanking());
+    room.logs.push(JSON.stringify(game.getRanking()));
   }
 }
 
