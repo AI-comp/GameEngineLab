@@ -39,7 +39,7 @@ Template.newRoom.events({
         if (error) {
           console.log(error);
         } else {
-          joinRoom(roomId);
+          joinRoom(roomId, $("#player_name").val());
         }
       });
     }
