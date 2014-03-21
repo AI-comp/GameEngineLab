@@ -30,7 +30,7 @@ Meteor.methods({
     room.players[playerIndex].command = command;
 
     var commands = _.map(room.players, function (player) {
-      return player.command && player.command.split(" ");
+      return player.command && player.command.trim().split(" ");
     });
     if (_.every(commands, function (command) { return command })) {
       processGame(room, commands);
