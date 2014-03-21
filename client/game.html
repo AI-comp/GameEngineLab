@@ -29,6 +29,10 @@
     {{/each}}
 
     {{> newRoom}}
+
+    <div style="margin-top: 12px">
+      <button id="clear">Clear All Rooms</button>
+    </div>
   </div>
 </template>
 
@@ -78,26 +82,19 @@
       {{> player}}
     {{/each}}
   </div>
-  <div>
-    <label for="cmd_text">Command:</label>
-    <input type="text" id="cmd_text" value="" />
-    <input type="button" id="send_cmd" value="Send" />
-    {{#if myCommand}}
-      {{> command myCommand}}
-    {{/if}}
-  </div>
+
+  {{#if started}}
+    <div>
+      <label for="cmd_text">Command:</label>
+      <input type="text" id="cmd_text" value="" />
+      <input type="button" id="send_cmd" value="Send" />
+    </div>
+  {{/if}}
 </template>
 
 <template name="player">
   <div class="player">
     <span class="name">{{name}}</span>
     <span class="ready">{{ready}}</span>
-    {{#if command}}
-      {{> command command}}
-    {{/if}}
   </div>
-</template>
-
-<template name="command">
-  <span class="command">{{text}}</span>
 </template>

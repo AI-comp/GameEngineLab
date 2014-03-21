@@ -1,17 +1,9 @@
-function game() {
-  return room() && Games.findOne(room().gameId);
-}
-
 function room() {
   return Rooms.findOne(Session.get("roomId"));
 }
 
 function myIndex() {
   return Session.get("playerIndex");
-}
-
-function me() {
-  return myIndex() && game() && game().players[myIndex()];
 }
 
 Template.outer.inRoom = function () {
@@ -22,8 +14,14 @@ Template.lobby.rooms = function () {
   return Rooms.find({});
 };
 
+Template.lobby.events({
+  "click #clear": function () {
+    Meteor.call("clear");
+  }
+});
+
 Template.roomInfo.events({
-  "click #join": function (event, template) {
+  "click #join": function () {
     joinRoom(this._id, $("#player_name").val());
   }
 });
@@ -49,15 +47,15 @@ Template.newRoom.events({
 });
 
 Template.console.gameLogs = function () {
-  return game() && game().logs;
+  return room() && room().logs;
 };
 
 Template.commandCenter.players = function () {
-  return game() && game().players;
+  return room() && room().players;
 };
 
-Template.commandCenter.myCommand = function () {
-  return me() && me().command;
+Template.commandCenter.started = function () {
+  return room() && room().isStarted;
 };
 
 Template.commandCenter.events({
@@ -65,6 +63,10 @@ Template.commandCenter.events({
     Meteor.call("sendCommand", room()._id, myIndex(), template.find("#cmd_text").value);
   }
 });
+
+Template.player.ready = function () {
+  return this.command ? "ready" : "thinking";
+};
 
 function joinRoom(roomId, playerName) {
   if (!playerName) {

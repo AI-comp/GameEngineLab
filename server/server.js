@@ -1,18 +1,18 @@
+var games = [];
+
 function startGame(room) {
-  var game = Games.findOne(room.gameId);
+  var game = games[room.gameId];
   game.initialize(room.capacity);
-  game.isStarted = true;
-  Games.update(game._id, game);
+  room.isStarted = true;
 }
 
-function processGame(gameId, commands) {
-  var game = Games.findOne(gameId);
+function processGame(room, commands) {
+  var game = games[room.gameId];
   game.processTurn(commands);
-  game.logs.push(game.getStatus());
+  room.logs.push(game.getStatus());
   if (game.isFinished()) {
-    game.logs.push(game.getRanking());
+    room.logs.push(game.getRanking());
   }
-  Games.update(gameId, game);
 }
 
 Meteor.startup(function () {
@@ -21,7 +21,7 @@ Meteor.startup(function () {
 Meteor.methods({
   clear: function () {
     Rooms.remove({});
-    Games.remove({});
+    games = [];
   },
 
   sendCommand: function (roomId, playerIndex, command) {
@@ -32,8 +32,12 @@ Meteor.methods({
       return player.command && player.command.split(" ");
     });
     if (_.every(commands, function (command) { return command })) {
-      processGame(room.gameId, commands);
+      processGame(room, commands);
+      _.each(room.players, function (player) {
+        player.command = undefined;
+      });
     }
+
     Rooms.update(roomId, room);
   },
 
@@ -51,6 +55,8 @@ Meteor.methods({
   },
 
   createRoom: function (roomName, capacity, gameEngine) {
-    return Rooms.insert(new Room(roomName, capacity, gameEngine));
+    var gameIndex = games.length;
+    games.push(eval(gameEngine));
+    return Rooms.insert(new Room(roomName, capacity, gameIndex));
   },
 });
