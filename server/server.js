@@ -3,6 +3,7 @@ var games = [];
 function startGame(room) {
   var game = games[room.gameId];
   game.initialize(room.capacity);
+  room.logs.push(game.getStatus());
   room.isStarted = true;
 }
 
