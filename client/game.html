@@ -23,15 +23,19 @@
       <input type="text" id="player_name" />
     </div>
 
+    <h1>Rooms</h1>
+
     {{#each rooms}}
       {{> roomInfo}}
     {{/each}}
 
-    {{> newRoom}}
-
     <div style="margin-top: 12px">
       <button id="clear">Clear All Rooms</button>
     </div>
+
+    <h1>Create a New Room</h1>
+
+    {{> newRoom}}
   </div>
 </template>
 
