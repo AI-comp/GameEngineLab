@@ -48,7 +48,9 @@
 
 <template name="roomInfo">
   <div>
-    <button id="join">Join</button>
+    {{#unless isStarted}}
+      <button id="join">Join</button>
+    {{/unless}}
     {{name}}
   </div>
 </template>
