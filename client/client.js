@@ -1,67 +1,82 @@
 function game() {
-  return Games.findOne({});
+  return room() && Games.findOne(room().gameId);
 }
+
+function room() {
+  return Rooms.findOne(Session.get("roomId"));
+}
+
+function myIndex() {
+  return Session.get("playerIndex");
+}
+
+function me() {
+  return myIndex() && game() && game().players[myIndex()];
+}
+
+Template.outer.inRoom = function () {
+  return (Session.get("roomId") != undefined);
+};
+
+Template.lobby.rooms = function () {
+  return Rooms.find({});
+};
+
+Template.roomInfo.events({
+  "click #join": function (event, template) {
+    joinRoom(this._id, $("#player_name").val());
+  }
+});
+
+Template.newRoom.events({
+  "click #new_room": function (event, template) {
+    var roomName = template.find("#room_name").value;
+    var capacity = parseInt(template.find("#capacity").value);
+    var gameEngine = template.find("#game_engine").value;
+    if (!roomName || !capacity || !gameEngine) {
+      alert("All information must be given.");
+    } else {
+      Meteor.call("createRoom", roomName, capacity, gameEngine, function (error, result) {
+        var roomId = result;
+        if (error) {
+          console.log(error);
+        } else {
+          joinRoom(roomId);
+        }
+      });
+    }
+  }
+});
 
 Template.console.gameLogs = function () {
-  return GameLogs.find({});
+  return game() && game().logs;
+};
+
+Template.commandCenter.players = function () {
+  return game() && game().players;
+};
+
+Template.commandCenter.myCommand = function () {
+  return me() && me().command;
+};
+
+Template.commandCenter.events({
+  'click #send_cmd': function (event, template) {
+    Meteor.call("sendCommand", room()._id, myIndex(), template.find("#cmd_text").value);
+  }
+});
+
+function joinRoom(roomId, playerName) {
+  if (!playerName) {
+    playerName = "Anonymous";
+  }
+  Meteor.call("joinRoom", roomId, playerName, function (error, result) {
+    if (error) {
+      console.log(error);
+    } else {
+      var playerIndex = result;
+      Session.set("roomId", roomId);
+      Session.set("playerIndex", playerIndex);
+    }
+  });
 }
-
-Template.command_center.me = Template.chat.me = function () {
-  return Players.findOne(Session.get("me"));
-};
-
-Template.command_center.players = function () {
-  return Players.find({}, { sort: { id: 1, name: 1 } });
-};
-
-Template.command_center.myCommand = function () {
-  if (!game()) return undefined;
-  var me = Template.command_center.me();
-  return Commands.findOne({ playerId: me._id, turn: game().turn });
-};
-
-Template.command_center.events({
-  'click #send_cmd': function () {
-    var me = Template.command_center.me();
-    var commandText = $("#cmd_text").val();
-    var command = new Command(me._id, commandText, game().turn);
-    Meteor.call("sendCommand", command);
-  }
-});
-
-Template.chat.messages = function () {
-  return Messages.find({});
-};
-
-Template.chat.events({
-  'click #enter': function () {
-    Meteor.call("enter", $("#name").val(), function (error, myId) {
-      Session.set("me", myId);
-    });
-  },
-  'click #ready': function () {
-    Players.update(Session.get("me"), { $set: { ready: true } });
-  },
-  'click #advance': function () {
-    cmds = _.range(game().turn + 1);
-    Meteor.call('advance_turn', [
-        cmds.map(function (x) { return 1; })
-      , cmds.map(function (x) { return 2; })
-      , cmds.map(function (x) { return 2; })
-      , cmds.map(function (x) { return 3; })
-    ]);
-  },
-  'click #clear': function () {
-    Meteor.call('clear');
-  },
-  'click #send': function () {
-    var me = Template.chat.me();
-    Messages.insert(new Message(me.name, $("#chat_msg").val()));
-  }
-});
-
-Template.player.command = function () {
-  if (!game()) return undefined;
-  return Commands.findOne({ playerId: this._id, turn: game().turn - 1 });;
-};
-

@@ -1,55 +1,56 @@
-function initializeGame() {
-  var game = new Game(4);
-  game.populateHeroines(10);
-  Games.insert(game);
-  return game;
+function startGame(room) {
+  var game = Games.findOne(room.gameId);
+  game.initialize(room.capacity);
+  game.isStarted = true;
+  Games.update(game._id, game);
 }
 
-function createCommandArray(commandsCursor) {
-  var commands = [];
-  commandsCursor.forEach(function (command) {
-    var player = Players.findOne(command.playerId);
-    commands[player.index] = command.text.split(" ");
-  });
-  return commands;
+function processGame(gameId, commands) {
+  var game = Games.findOne(gameId);
+  game.processTurn(commands);
+  game.logs.push(game.getStatus());
+  if (game.isFinished()) {
+    game.logs.push(game.getRanking());
+  }
+  Games.update(gameId, game);
 }
 
 Meteor.startup(function () {
-  var game = initializeGame();
+});
 
-  return Meteor.methods({
-    advance_turn: function (cmds) {
-      console.log(JSON.stringify(game));
-      console.log(cmds);
-      if (!game.isFinished()) {
-        game.proceed(cmds);
-      }
-      GameLogs.insert(new GameLog(JSON.stringify(game.getRanking())));
-      var gameId = Games.findOne({})._id;
-      Games.update(gameId, { $set: game });
-    },
+Meteor.methods({
+  clear: function () {
+    Rooms.remove({});
+    Games.remove({});
+  },
 
-    clear: function () {
-      Players.remove({});
-      Messages.remove({});
-      Commands.remove({});
-      GameLogs.remove({});
-      Games.remove({});
-      game = initializeGame();
-    },
+  sendCommand: function (roomId, playerIndex, command) {
+    var room = Rooms.findOne(roomId);
+    room.players[playerIndex].command = command;
 
-    sendCommand: function (command) {
-      Commands.update({ playerId: command.playerId, turn: command.turn }, command, { upsert: true });
-      var game = Games.findOne({});
-      var commandsForThisTurn = Commands.find({ turn: game.turn });
-      if (commandsForThisTurn.count() == Players.find({}).count()) {
-        Meteor.call("advance_turn", createCommandArray(commandsForThisTurn));
-      }
-    },
+    var commands = _.map(room.players, function (player) {
+      return player.command && player.command.split(" ");
+    });
+    if (_.every(commands, function (command) { return command })) {
+      processGame(room.gameId, commands);
+    }
+    Rooms.update(roomId, room);
+  },
 
-    enter: function (name) {
-      var index = Players.find({}).count();
-      return Players.insert(new Player(name, index));
-    },
-  });
+  joinRoom: function (roomId, playerName) {
+    var room = Rooms.findOne(roomId);
+    var index = room.players.length;
+    room.players.push(new Player(playerName, index));
+
+    if (room.players.length == room.capacity) {
+      startGame(room);
+    }
+
+    Rooms.update(roomId, room);
+    return index;
+  },
+
+  createRoom: function (roomName, capacity, gameEngine) {
+    return Rooms.insert(new Room(roomName, capacity, gameEngine));
+  },
 });

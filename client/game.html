@@ -3,64 +3,89 @@
 </head>
 
 <body>
-  <div id="outer">
-    {{> console}}
-    {{> command_center}}
-    {{> chat}}
-  </div>
+  {{> outer}}
 </body>
+
+<template name="outer">
+  <div id="outer">
+    {{#unless inRoom}}
+      {{> lobby}}
+    {{else}}
+      {{> console}}
+      {{> commandCenter}}
+    {{/unless}}
+  </div>
+</template>
+
+<template name="lobby">
+  <div>
+    <div>
+      <label for="player_name">Your Name:</label>
+      <input type="text" id="player_name" />
+    </div>
+
+    {{#each rooms}}
+      {{> roomInfo}}
+    {{/each}}
+
+    {{> newRoom}}
+  </div>
+</template>
+
+<template name="roomInfo">
+  <div>
+    <button id="join">Join</button>
+    {{name}}
+  </div>
+</template>
+
+<template name="newRoom">
+  <div class="block">
+    <div>
+      <label for="room_name">Room Name:</label>
+      <input id="room_name" type="text" />
+    </div>
+
+    <div>
+      <label for="capacity">Number of Players:</label>
+      <input id="capacity" type="number" value="4" />
+    </div>
+    
+    <div>
+      <label for="game_engine">Game Engine:</label>
+      <textarea id="game_engine" rows="10" cols="80" />
+    </div>
+    
+    <div>
+      <button id="new_room">New Room</button>
+    </div>
+  </div>
+</template>
 
 <template name="console">
   <div class="console">
     {{#each gameLogs}}
-      {{> gameLog}}
+      <div class="game_log">
+        {{this}}
+      </div>
     {{/each}}
   </div>
 </template>
 
-<template name="gameLog">
-  <div class="game_log">
-    {{text}}
-  </div>
-</template>
-
-<template name="command_center">
-  <p>
+<template name="commandCenter">
+  <div>
     {{#each players}}
       {{> player}}
     {{/each}}
-  </p>
-  <p>
-    {{#if me}}
-      command: <input type="text" id="cmd_text" value="" />
-      <input type="button" id="send_cmd" value="Send" />
-      {{#if myCommand}}
-        {{> command myCommand}}
-      {{/if}}
+  </div>
+  <div>
+    <label for="cmd_text">Command:</label>
+    <input type="text" id="cmd_text" value="" />
+    <input type="button" id="send_cmd" value="Send" />
+    {{#if myCommand}}
+      {{> command myCommand}}
     {{/if}}
-  </p>
-</template>
-
-<template name="chat">
-  <p>
-    {{#each messages}}
-      {{> message}}
-    {{/each}}
-  </p>
-  <p>
-    {{#if me}}
-      message: <input type="text" id="chat_msg" value="" />
-      <input type="button" id="send" value="Send" />
-      <input type="button" id="advance" value="Advance" />
-      {{#unless me.ready}}
-        <input type="button" id="ready" value="Ready" />
-      {{/unless}}
-    {{else}}
-      name: <input type="text" id="name" value="your name" />
-      <input type="button" id="enter" value="Enter" />
-    {{/if}}
-    <input type="button" id="clear" value="Clear" />
-  </p>
+  </div>
 </template>
 
 <template name="player">
@@ -71,11 +96,6 @@
       {{> command command}}
     {{/if}}
   </div>
-</template>
-
-<template name="message">
-  {{name}} : {{text}}
-  <br />
 </template>
 
 <template name="command">
