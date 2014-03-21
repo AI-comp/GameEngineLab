@@ -50,11 +50,11 @@ Template.console.gameLogs = function () {
   return room() && room().logs;
 };
 
-Template.commandCenter.players = function () {
+Template.playerList.players = function () {
   return room() && room().players;
 };
 
-Template.commandCenter.started = function () {
+Template.game.started = function () {
   return room() && room().isStarted;
 };
 
@@ -65,7 +65,11 @@ Template.commandCenter.events({
 });
 
 Template.player.ready = function () {
-  return this.command ? "ready" : "thinking";
+  if (room() && room().isStarted) {
+    return this.command ? "Ready" : "Thinking";
+  } else {
+    return "Waiting for other players to join";
+  }
 };
 
 function joinRoom(roomId, playerName) {

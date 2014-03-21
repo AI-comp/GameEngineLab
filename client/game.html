@@ -11,8 +11,7 @@
     {{#unless inRoom}}
       {{> lobby}}
     {{else}}
-      {{> console}}
-      {{> commandCenter}}
+      {{> game}}
     {{/unless}}
   </div>
 </template>
@@ -35,6 +34,17 @@
     </div>
   </div>
 </template>
+
+<template name="game">
+  <div>
+    {{> console}}
+    {{> playerList}}
+    {{#if started}}
+      {{> commandCenter}}
+    {{/if}}
+  </div>
+</template>
+
 
 <template name="roomInfo">
   <div>
@@ -78,18 +88,18 @@
 
 <template name="commandCenter">
   <div>
+    <label for="cmd_text">Command:</label>
+    <input type="text" id="cmd_text" value="" />
+    <input type="button" id="send_cmd" value="Send" />
+  </div>
+</template>
+
+<template name="playerList">
+  <div>
     {{#each players}}
       {{> player}}
     {{/each}}
   </div>
-
-  {{#if started}}
-    <div>
-      <label for="cmd_text">Command:</label>
-      <input type="text" id="cmd_text" value="" />
-      <input type="button" id="send_cmd" value="Send" />
-    </div>
-  {{/if}}
 </template>
 
 <template name="player">
