@@ -61,7 +61,7 @@ body {
   cursor: pointer;
 }
 
-.console {
+#console {
     overflow: scroll;
 	width: 600px;
 	height: 250px;

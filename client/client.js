@@ -50,6 +50,10 @@ Template.console.gameLogs = function () {
   return room() && room().logs;
 };
 
+Template.console.rendered = function () {
+  $("#console").scrollTop($("#console")[0].scrollHeight);
+}
+
 Template.playerList.players = function () {
   return room() && room().players;
 };
