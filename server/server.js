@@ -30,7 +30,7 @@ Meteor.startup(function () {
   var fs = Npm.require('fs');
   var scriptDir = '../server/assets/app/';
   var scriptNames = fs.readdirSync(scriptDir)
-    .filter(function(name) { return name.endsWith(".js"); });
+    .filter(function(name) { return _.endsWith(name, ".js"); });
 
   Scripts.remove({});
   _.each(scriptNames, function(name) {
