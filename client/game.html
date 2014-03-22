@@ -46,6 +46,7 @@
     {{#if started}}
       {{> commandCenter}}
     {{/if}}
+    {{> chat}}
   </div>
 </template>
 
@@ -97,8 +98,8 @@
 </template>
 
 <template name="commandCenter">
+  <h1>Command</h1>
   <div>
-    <label for="cmd_text">Command:</label>
     <input type="text" id="cmd_text" value="" />
     <input type="button" id="send_cmd" value="Send" />
   </div>
@@ -116,5 +117,19 @@
   <div class="player">
     <span class="name">{{name}}</span>
     <span class="ready">{{ready}}</span>
+  </div>
+</template>
+
+<template name="chat">
+  <h1>Chat</h1>
+  <input type="text" id="chat_text" value="" />
+  <input type="button" id="send_chat" value="Send" />
+
+  <div>
+    {{#each messages}}
+      <div>
+        {{name}} : {{text}}
+      </div>
+    {{/each}}
   </div>
 </template>

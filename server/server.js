@@ -1,6 +1,6 @@
 var games = [];
 
-String.prototype.endsWith = function(suffix) {
+String.prototype.endsWith = function (suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
@@ -29,10 +29,10 @@ Meteor.startup(function () {
   var fs = Npm.require('fs');
   var scriptDir = '../server/assets/app/';
   var scriptNames = fs.readdirSync(scriptDir)
-    .filter(function(name) { return name.endsWith(".js"); });
+    .filter(function (name) { return name.endsWith(".js"); });
 
   Scripts.remove({});
-  _.each(scriptNames, function(name) {
+  _.each(scriptNames, function (name) {
     console.log(name);
     var content = fs.readFileSync(scriptDir + name).toString();
     Scripts.insert(new Script(name, content));
@@ -80,4 +80,8 @@ Meteor.methods({
     games.push(eval(gameEngine));
     return Rooms.insert(new Room(roomName, capacity, gameIndex));
   },
+
+  sendMessage: function (roomId, message) {
+    Rooms.update(roomId, { $push: { messages: message } });
+  }
 });

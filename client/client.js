@@ -70,8 +70,10 @@ Template.game.started = function () {
 };
 
 Template.commandCenter.events({
-  'click #send_cmd': function (event, template) {
-    Meteor.call("sendCommand", room()._id, myIndex(), template.find("#cmd_text").value);
+  'click #send_cmd, keydown #cmd_text': function (event, template) {
+    send(event, template.find("#cmd_text"), function () {
+      Meteor.call("sendCommand", room()._id, myIndex(), template.find("#cmd_text").value);
+    });
   }
 });
 
@@ -82,6 +84,31 @@ Template.player.ready = function () {
     return "Waiting for other players to join";
   }
 };
+
+Template.chat.messages = function () {
+  return room() && room().messages.reverse();
+};
+
+Template.chat.events({
+  'click #send_chat, keydown #chat_text': function (event, template) {
+    var textbox = template.find("#chat_text");
+    send(event, textbox, function () {
+      var message = new Message(room().players[myIndex()].name, textbox.value);
+      Meteor.call("sendMessage", room()._id, message);
+    });
+  }
+});
+
+function send(event, textbox, func) {
+  if (event.type === "click" || (event.type === "keydown" && String.fromCharCode(event.which) === "\r")) {
+    var text = textbox.value;
+    if (text) {
+      func();
+      textbox.value = "";
+    }
+    textbox.focus();
+  }
+}
 
 function joinRoom(roomId, playerName) {
   if (!playerName) {
