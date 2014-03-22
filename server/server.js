@@ -33,7 +33,7 @@ Meteor.startup(function () {
 
   Scripts.remove({});
   _.each(scriptNames, function (name) {
-    console.log(name);
+    console.log("Loading " + name);
     var content = fs.readFileSync(scriptDir + name).toString();
     Scripts.insert(new Script(name, content));
   });
