@@ -1,9 +1,5 @@
 var games = [];
 
-String.prototype.endsWith = function(suffix) {
-  return this.indexOf(suffix, this.length - suffix.length) !== -1;
-};
-
 function startGame(room) {
   var game = games[room.gameId];
   game.initialize(room.capacity);
@@ -25,8 +21,6 @@ function processGame(room, commands) {
 }
 
 Meteor.startup(function () {
-  //Assets.getText('sample.js');
-
   var fs = Npm.require('fs');
   var scriptDir = '../server/assets/app/';
   var scriptNames = fs.readdirSync(scriptDir)
