@@ -17,10 +17,11 @@ function processGame(room, commands) {
     return;
   }
   game.processTurn(commands);
-  room.logs.push(game.getStatus());
   if (game.isFinished()) {
     room.logs.push(game.getRanking());
     game.finished = true;
+  } else {
+    room.logs.push(game.getStatus());
   }
 }
 
