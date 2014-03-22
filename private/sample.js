@@ -11,11 +11,11 @@
     },
     isFinished:function(){
       console.log("isFinished");
-      return this.turn==2;
+      return this.turn == 2;
     },
     getStatus:function(){
       console.log("getStatus");
-      return "getStatus";
+      return "getStatus turn: " + this.turn;
     },
     getRanking:function(){
       console.log("getRanking");

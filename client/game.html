@@ -70,7 +70,11 @@
       <label for="capacity">Number of Players:</label>
       <input id="capacity" type="number" value="4" />
     </div>
-    
+
+    <div>
+      <button id="new_room">New Room</button>
+    </div>
+
     <div>
       <label for="game_engine">Game Engine:</label>
       <select id="script">
@@ -79,11 +83,7 @@
         <option value="{{script}}">{{name}}</option>
       {{/each}}
       </select>
-      <textarea id="game_engine" rows="10" cols="80" />
-    </div>
-    
-    <div>
-      <button id="new_room">New Room</button>
+      <textarea id="game_engine" rows="30" cols="100" />
     </div>
   </div>
 </template>
