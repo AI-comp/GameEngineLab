@@ -98,8 +98,8 @@
 </template>
 
 <template name="commandCenter">
-  <h1>Command</h1>
   <div>
+    <h1>Command</h1>
     <input type="text" id="cmd_text" value="" />
     <input type="button" id="send_cmd" value="Send" />
   </div>
@@ -121,15 +121,17 @@
 </template>
 
 <template name="chat">
-  <h1>Chat</h1>
-  <input type="text" id="chat_text" value="" />
-  <input type="button" id="send_chat" value="Send" />
-
   <div>
-    {{#each messages}}
-      <div>
-        {{name}} : {{text}}
-      </div>
-    {{/each}}
+    <h1>Chat</h1>
+    <input type="text" id="chat_text" value="" />
+    <input type="button" id="send_chat" value="Send" />
+
+    <div>
+      {{#each messages}}
+        <div>
+          {{name}} : {{text}}
+        </div>
+      {{/each}}
+    </div>
   </div>
 </template>
