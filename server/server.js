@@ -9,14 +9,28 @@ function startGame(room) {
 
 function processGame(room, commands) {
   var game = games[room.gameId];
+  if (game.finished === true) {
+    return;
+  }
   game.processTurn(commands);
   room.logs.push(game.getStatus());
   if (game.isFinished()) {
     room.logs.push(game.getRanking());
+    game.finished = true;
   }
 }
 
 Meteor.startup(function () {
+  var fs = Npm.require('fs');
+  var scriptDir = '../client/app/';
+  var scriptNames = fs.readdirSync(scriptDir)
+    .filter(function(name) { return _.endsWith(name, ".js"); });
+
+  Scripts.remove({});
+  _.each(scriptNames, function(name) {
+    var content = fs.readFileSync(scriptDir + name).toString();
+    Scripts.insert(new Script(name, content));
+  });
 });
 
 Meteor.methods({

@@ -73,6 +73,12 @@
     
     <div>
       <label for="game_engine">Game Engine:</label>
+      <select id="script">
+        <option value="">original</option>
+      {{#each scripts}}
+        <option value="{{script}}">{{name}}</option>
+      {{/each}}
+      </select>
       <textarea id="game_engine" rows="10" cols="80" />
     </div>
     

@@ -14,6 +14,10 @@ Template.lobby.rooms = function () {
   return Rooms.find({});
 };
 
+Template.newRoom.scripts = function () {
+  return Scripts.find({});
+};
+
 Template.lobby.events({
   "click #clear": function () {
     Meteor.call("clear");
@@ -27,7 +31,10 @@ Template.roomInfo.events({
 });
 
 Template.newRoom.events({
-  "click #new_room": function (event, template) {
+  "change #script": function (event, template) {
+    template.find("#game_engine").value = event.currentTarget.value;
+  }
+  , "click #new_room": function (event, template) {
     var roomName = template.find("#room_name").value;
     var capacity = parseInt(template.find("#capacity").value);
     var gameEngine = template.find("#game_engine").value;
