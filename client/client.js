@@ -54,7 +54,18 @@ Template.newRoom.events({
 });
 
 Template.console.gameLogs = function () {
-  return room() && room().logs;
+  var r = room();
+  if (r) {
+    var logs = r.logs;
+    if (logs.length > 0 && logs[0] instanceof Array) {
+      console.log(logs);
+      var index = Session.get("playerIndex");
+      return _.map(logs, function(log) { return log[index]; });
+    } else {
+      return logs;
+    }
+  }
+  return r;
 };
 
 Template.console.rendered = function () {
@@ -62,11 +73,13 @@ Template.console.rendered = function () {
 }
 
 Template.playerList.players = function () {
-  return room() && room().players;
+  var r = room();
+  return r && r.players;
 };
 
 Template.game.started = function () {
-  return room() && room().isStarted;
+  var r = room();
+  return r && r.isStarted;
 };
 
 Template.commandCenter.events({
@@ -78,7 +91,8 @@ Template.commandCenter.events({
 });
 
 Template.player.ready = function () {
-  if (room() && room().isStarted) {
+  var r = room();
+  if (r && r.isStarted) {
     return this.command ? "Ready" : "Thinking";
   } else {
     return "Waiting for other players to join";
@@ -86,7 +100,8 @@ Template.player.ready = function () {
 };
 
 Template.chat.messages = function () {
-  return room() && room().messages.reverse();
+  var r = room();
+  return r && r.messages.reverse();
 };
 
 Template.chat.events({
