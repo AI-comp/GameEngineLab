@@ -55,17 +55,17 @@ Template.newRoom.events({
 
 Template.console.gameLogs = function () {
   var r = room();
-  if (r) {
-    var logs = r.logs;
-    if (logs.length > 0 && logs[0] instanceof Array) {
-      console.log(logs);
-      var index = Session.get("playerIndex");
-      return _.map(logs, function(log) { return log[index]; });
-    } else {
-      return logs;
-    }
+  if (!r) {
+    return undefined;
   }
-  return r;
+  return _.map(r.logs, function (log) {
+    if (log instanceof Array) {
+      var index = Session.get("playerIndex");
+      return log[index];
+    } else {
+      return log;
+    }
+  });
 };
 
 Template.console.rendered = function () {
