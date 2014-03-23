@@ -4,7 +4,7 @@ GameEngineLab
 # How to Experiment Your Game
 
 1. Write your game engine code in JavaScript. You can see existing code [here](private).
-2. Access [GameEngineLab](http://game-engine-lab.meteor.com/).
+2. Access GameEngineLab.
 3. Enter "Room Name" and "Numbers of Players". We suggest to enter ```1``` in the "Numbers of Players" for testing.
 4. Choose ```original``` in "Game Engine" and paste your code.
 5. Push "New Room".
