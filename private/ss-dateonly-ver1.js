@@ -6,15 +6,15 @@
       this.turn = 1;
     }
 
-    Game.prototype.initialize = function (numHeroes) {
-      this.numHeroes = numHeroes;
-      this.populateHeroines(numHeroes * 2.5);
+    Game.prototype.initialize = function (numheroes) {
+      this.numheroes = numheroes;
+      this.populateHeroines(numheroes * 2.5);
     };
 
     Game.prototype.populateHeroines = function (numHeroines) {
       this.heroines = [];
       for (var i = 0; i < numHeroines; i++) {
-        this.heroines.push(new Heroine(Math.floor(Math.random() * 6) + 1, this.numHeroes));
+        this.heroines.push(new Heroine(Math.floor(Math.random() * 6) + 1, this.numheroes));
       }
     };
 
@@ -23,9 +23,8 @@
     };
 
     Game.prototype.processTurn = function (moves) {
-
       for (var i = 0; i < (this.isHoliday() ? 2 : 5) ; i++) {
-        for (var heroIndex = 0; heroIndex < this.numHeroes; heroIndex++) {
+        for (var heroIndex = 0; heroIndex < this.numheroes; heroIndex++) {
           var targetHeroineIndex = parseInt(moves[heroIndex][i]);
           if (!(targetHeroineIndex >= 0 && targetHeroineIndex < this.heroines.length)) {
             targetHeroineIndex = 0;
@@ -43,23 +42,23 @@
 
     Game.prototype.getRanking = function () {
       var heroes = [];
-      for (var index = 0; index < this.numHeroes; index++) {
+      for (var index = 0; index < this.numheroes; index++) {
         heroes.push(new Hero(index));
       }
 
       _.each(this.heroines, function (heroine) {
-        var bestHeroes = heroine.getBestHeroes(heroes);
-        _.each(bestHeroes, function (bestHero) {
-          bestHero.star += heroine.value / bestHeroes.length;
+        var bestheroes = heroine.getBestheroes(heroes);
+        _.each(bestheroes, function (bestHero) {
+          bestHero.star += heroine.value / bestheroes.length;
         });
       });
 
       var text = "Game Is Over!\n";
       text += this.getScoreText(true);
 
-      var rankedHeroes = heroes.slice(0).sort(Hero.compareTo).reverse();
-      for (var rank = 0; rank < rankedHeroes.length; rank++) {
-        var hero = rankedHeroes[rank];
+      var rankedheroes = heroes.slice(0).sort(Hero.compareTo).reverse();
+      for (var rank = 0; rank < rankedheroes.length; rank++) {
+        var hero = rankedheroes[rank];
         text += (rank + 1) + ": Player " + hero.index + ", " + hero.star + " pts.\n";
       }
       return text;
@@ -79,7 +78,7 @@
       for (var i = 0; i < this.heroines.length; i++) {
         var heroine = this.heroines[i];
         text += "Heroine " + i + ": " + heroine.value + ","
-        for (var j = 0; j < this.numHeroes; j++) {
+        for (var j = 0; j < this.numheroes; j++) {
           text += " " + (useRealScore ? heroine.realScore[j] : heroine.revealedScore[j]);
         }
         text += "\n";
@@ -104,11 +103,11 @@
   })();
 
   var Heroine = (function () {
-    function Heroine(value, numHeroes) {
+    function Heroine(value, numheroes) {
       this.value = value;
       this.revealedScore = [];
       this.realScore = [];
-      for (var i = 0; i < numHeroes; i++) {
+      for (var i = 0; i < numheroes; i++) {
         this.revealedScore.push(0);
         this.realScore.push(0);
       }
@@ -121,15 +120,15 @@
       }
     };
 
-    Heroine.prototype.getBestHeroes = function (heroes) {
+    Heroine.prototype.getBestheroes = function (heroes) {
       var maxScore = Math.max.apply(null, this.realScore);
-      var bestHeroes = [];
+      var bestheroes = [];
       _.each(heroes, function (hero) {
         if (this.realScore[hero.index] === maxScore) {
-          bestHeroes.push(hero);
+          bestheroes.push(hero);
         }
       }, this);
-      return bestHeroes;
+      return bestheroes;
     };
 
     return Heroine;
