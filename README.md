@@ -9,4 +9,4 @@ GameEngineLab
 4. Choose ```original``` in "Game Engine" and paste yourcode.
 5. Push "New Room".
 6. If you feel that your game engine can be released in GameEngineLab, please commit your code in the [private](private) directory.
-7. We will deploy it and you will choose your game engine in "Game Engine" selection.
+7. After we deploy it, you can choose your game engine in "Game Engine" selection.
