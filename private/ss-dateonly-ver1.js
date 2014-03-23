@@ -65,21 +65,25 @@
     };
 
     Game.prototype.getStatus = function () {
-      var status = "";
-      status += "Turn " + (this.turn) + "\n";
-      status += (this.isHoliday() ? "Holiday" : "Weekday") + "\n";
-      status += this.getScoreText(false);
-
-      return status;
+      return _.map(_.range(this.numheroes), function(i) {
+        var status = "";
+        status += "Turn " + (this.turn) + "\n";
+        status += (this.isHoliday() ? "Holiday" : "Weekday") + "\n";
+        status += this.getScoreText(false, i);
+        return status;
+      }, this);
     };
 
-    Game.prototype.getScoreText = function (useRealScore) {
+    Game.prototype.getScoreText = function (useRealScore, playerIndex) {
       var text = "";
       for (var i = 0; i < this.heroines.length; i++) {
         var heroine = this.heroines[i];
         text += "Heroine " + i + ": " + heroine.value + ","
         for (var j = 0; j < this.numheroes; j++) {
           text += " " + (useRealScore ? heroine.realScore[j] : heroine.revealedScore[j]);
+          if (j === playerIndex) {
+            text += " (" + heroine.realScore[j] + ")";
+          }
         }
         text += "\n";
       }

@@ -20,7 +20,9 @@
     },
     getStatus: function() {
       console.log("getStatus");
-      return "getStatus turn: " + this.turn + ", scores: " + this.scores.join(', ');
+      return _.map(_.range(this.scores), function(i) {
+        return "getStatus turn: " + this.turn + ", scores: " + this.scores.join(', ');
+      }, this);
     },
     getRanking: function() {
       console.log("getRanking");
