@@ -12,7 +12,7 @@
     };
 
     Game.prototype.populateHeroines = function (numHeroines) {
-      this.heroines = []
+      this.heroines = [];
       for (var i = 0; i < numHeroines; i++) {
         this.heroines.push(new Heroine(Math.floor(Math.random() * 6) + 1, this.numHeroes));
       }
